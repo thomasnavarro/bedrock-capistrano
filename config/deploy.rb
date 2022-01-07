@@ -9,17 +9,13 @@ set :repo_url, 'git@github.com:thomasnavarro/bedrock-capistrano.git'
 # This could be overridden in a stage config file
 set :branch, :master
 
-# set :deploy_to, -> { "/srv/www/#{fetch(:application)}" }
-set :deploy_to, -> { "/Users/tnavarro/Documents/remote/#{fetch(:application)}" }
-
+set :deploy_to, -> { "/srv/www/#{fetch(:application)}" }
 
 # Use :debug for more verbose output when troubleshooting
-set :log_level, :info
+set :log_level, :debug
 
-# Apache users with .htaccess files:
 # it needs to be added to linked_files so it persists across deploys:
-# set :linked_files, fetch(:linked_files, []).push('.env', 'web/.htaccess')
-set :linked_files, fetch(:linked_files, []).push('.env')
+set :linked_files, fetch(:linked_files, []).push('.env', 'web/.htaccess')
 set :linked_dirs, fetch(:linked_dirs, []).push('web/app/uploads')
 
 namespace :deploy do
@@ -61,11 +57,3 @@ end
 # Note that you need to have WP-CLI installed on your server
 # Uncomment the following line to run it on deploys if needed
 # after 'deploy:publishing', 'deploy:update_option_paths'
-
-namespace :deploy do
-  after :updated do
-    invoke 'php:composer'
-    invoke 'yarn:install'
-    invoke 'yarn:build'
-  end
-end
